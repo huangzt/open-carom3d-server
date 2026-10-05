@@ -68,6 +68,12 @@ namespace business {
             UserService::getInstance().matchFinished(user);
 		}
 	};
+    
+	class RequestDrawAction : public GameServerAction<int> {
+		void execute(const ActionData& action, User& user, const int* data) override {
+            UserService::getInstance().requestDraw(user, *data);
+		}
+	};
 
     class PlayerProfileRequestAction : public GameServerAction<wchar_t> {
     public:

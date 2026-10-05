@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  carom3d-server:
+    image: scottyhardy/docker-wine:latest
+    container_name: carom3d-server
+    restart: unless-stopped
+    volumes:
+      - /home/carom3d/x64-Release:/app:rw
+    working_dir: /app
+    environment:
+      - DISPLAY=:99
+      - WINEARCH=win64
+      - WINEDEBUG=-all
+      - XDG_RUNTIME_DIR=/tmp/runtime-wine
+    command: bash -lc "mkdir -p /tmp/runtime-wine && chmod 700 /tmp/runtime-wine && exec wine open_carom3d_server.exe"
+    stdin_open: true
+    tty: true
+    network_mode: host

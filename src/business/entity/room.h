@@ -40,6 +40,7 @@ namespace business {
             int slot;
             bool inGameScreen;
 			bool playing;
+			bool isDrawing;
         };
 
         struct GameInfo {
@@ -70,6 +71,7 @@ namespace business {
 
         Match *m_matchInfo;
 		int m_playingUserCount;
+		int m_drawingUserCount;
         int m_inGameScreenUserCount;
 
         User *m_creator;
@@ -141,9 +143,11 @@ namespace business {
         u32 startMatch();
         u32 endMatch();
         void setUserFinishedPlaying(User& user);
+        void setUserDrawing(User& user, bool isDrawing);
 		void setUserOutOfGameScreen(User& user);
 
         int playingUserCount() const { return m_playingUserCount; }
+        int drawingUserCount() const { return m_drawingUserCount; }
         int inGameScreenUserCount() const { return m_inGameScreenUserCount; }
 
         int resetUserFromSlot(int slot);

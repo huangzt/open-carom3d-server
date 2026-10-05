@@ -17,8 +17,11 @@ namespace business {
         Account &m_account;
         u32 m_id;
         std::wstring m_playerName;
-        int m_points;
-        int m_level;
+        int m_points;//分数
+        int m_level;//等级
+        u8 m_maxpower = 150;//最大力度
+        u8 m_minpower = 1;//最小力度
+        u32 m_cueId = 3000;//球杆编号
 
     public:
         explicit Player(Account &account);
@@ -28,6 +31,40 @@ namespace business {
         const wchar_t *name() const { return m_playerName.c_str(); }
         int points() const { return m_points; }
         int level() const { return m_level; }
+
+        void setLevel(int mlevel) {
+            m_level = mlevel;
+        }
+
+        // Getter for maxpower
+        u8 maxpower() const {
+            return m_maxpower;
+        }
+
+        // Setter for maxpower
+        void setMaxPower(u8 maxpower) {
+            m_maxpower = maxpower;
+        }
+
+        // Getter for minpower
+        u8 minpower() const {
+            return m_minpower;
+        }
+
+        // Setter for minpower
+        void setMinPower(u8 minpower) {
+            m_minpower = minpower;
+        }
+
+        // Getter for cueid
+        u32 cueId() const {
+            return m_cueId;
+        }
+
+        // Setter for cueid
+        void setCueId(u32 cueId) {
+            m_cueId = cueId;
+        }
     };
 
 }

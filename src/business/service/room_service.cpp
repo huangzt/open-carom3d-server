@@ -12,6 +12,7 @@
 #include <business/util/destination.h>
 #include "channel_service.h"
 #include "room_service.h"
+#include "user_service.h"
 
 namespace business {
 
@@ -284,6 +285,36 @@ namespace business {
             this->notifyServerOfRoomStateUpdate(user.server(), room);
         }
 
+    }
+    
+    void RoomService::userRequestDraw(Room& room, User& user, int isDraw) {
+        Room* room1 = user.roomIn();
+        if (!room1)
+            return;
+        if (isDraw == 1)
+        {
+            room.setUserDrawing(user, true);
+            std::wstring message = std::wstring(user.player()->name()) + L" 请求和局\n";
+            for (auto userIn : room1->users()) {
+                if (userIn != &user) {
+                    UserService::getInstance().sendNotifyMessage(*userIn, message.c_str());
+                }else
+				{
+					UserService::getInstance().sendNotifyMessage(*userIn, L"请求和局命令不可用，只能强退！\n");
+				}   
+            }
+		}
+        else
+        {
+            room.setUserDrawing(user, false);
+            std::wstring message = std::wstring(user.player()->name()) + L" 取消请求和局\n";
+            for (auto userIn : room1->users()) {
+                if (userIn != &user) {
+                    UserService::getInstance().sendNotifyMessage(*userIn, message.c_str());
+                }
+            }
+        }
+        
     }
 
     void RoomService::setUserOutOfGameScreen(Room& room, User& user) {

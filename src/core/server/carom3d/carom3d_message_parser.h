@@ -14,6 +14,18 @@ namespace core {
     struct ParsedDataResultInfo {
         std::vector<ActionData> parsedActions;
         unsigned int parsedTotalLen;
+        bool parseSuccess;          // 解析是否成功
+        unsigned int errorActionId; // 发生错误的 ActionID
+        unsigned int expectedLen;   // 期望的数据长度
+        unsigned int actualLen;     // 实际的数据长度
+        
+        ParsedDataResultInfo() 
+            : parsedTotalLen(0)
+            , parseSuccess(true)
+            , errorActionId(0)
+            , expectedLen(0)
+            , actualLen(0) {
+        }
     };
 
     class Carom3DMessageParser {

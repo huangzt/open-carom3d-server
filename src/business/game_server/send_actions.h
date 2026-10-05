@@ -110,14 +110,18 @@ namespace business {
             RoomPlayerData roomPlayer = { 0 };
             ::wcscpy(roomPlayer.id, player.name());
             roomPlayer.id[PLAYER_NAME_MAX_LEN] = L'\0';
-            ::wcscpy(roomPlayer.country, L"BR");
+            ::wcscpy(roomPlayer.country, L"CN");
             roomPlayer.accountNumber = player.id();
             roomPlayer.level = player.level();
             roomPlayer.listIndex = m_listIndex;
-            roomPlayer.cueId = 3000;
+            roomPlayer.cueId = player.cueId();
             roomPlayer.unk130 = 1;
-            roomPlayer.power = 150;
-            roomPlayer.power_range = 150;
+
+            roomPlayer.power = player.maxpower();//最大力度
+            roomPlayer.power_range = player.maxpower() - player.minpower();//区间力度
+
+            //roomPlayer.power = 150;//最大力度
+            //roomPlayer.power_range = 150;//区间力度
             roomPlayer.chalks = 0;
             roomPlayer.control = 150;
             roomPlayer.backSpin = 54;
@@ -155,7 +159,7 @@ namespace business {
             ::wcscpy(data.playerGuild, L"");
             ::wcscpy(data.loggedServerName, L""); //TODO(CGR): get server name
             data.serverId = 0; //TODO(CGR): get server id
-            ::wcscpy(data.country, L"BR"); //TODO(CGR): ip_to_country
+            ::wcscpy(data.country, L"CN"); //TODO(CGR): ip_to_country
             data.wins = 0 * 10;
             data.level = m_player.level();
             return ActionData(0x3A, &data, sizeof(data));

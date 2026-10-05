@@ -1,9 +1,20 @@
-﻿################################################################################
-# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
-################################################################################
-
+# IDE / editor
 /.vs
-/project/out/build/x64-Debug
-/project/out/build/x64-Debug (padrão)
-/project/out/build/x64-Release
+/.vscode
+/.cursor
 /project/CMakeSettings.json
+.DS_Store
+._*
+
+# Build outputs
+/build
+/build-release
+/project/out
+
+# Binaries (copied from MySQL Connector C++ install dir at build time)
+*.dll
+*.exe
+
+# Local secrets / data (see resources/mysql.txt.example, sql/sys_account.sql)
+/resources/mysql.txt
+/carom3d.sql

@@ -32,6 +32,7 @@ namespace core {
 
         virtual void onUserAction(Carom3DUserSession& session, const ActionData& actionData);
         virtual void onUnhandledUserAction(Carom3DUserSession& session, const ActionData& actionData);
+        virtual void onHandledUserAction(Carom3DUserSession& session, const ActionData& actionData);
     };
 
 }

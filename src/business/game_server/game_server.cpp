@@ -38,6 +38,7 @@ namespace business {
 #define MATCH_MAKER_SCREEN_REQUEST 0x97
 #define ROOM_MESSAGE_ACTION 0x9A
 #define JOINID_ACTION 0xA1
+#define REQUEST_DRAW 0x9F
 
 //Action Sent to player: 0x4F (LG_BANUSER): TODO(CGR): what is this?
 
@@ -66,6 +67,7 @@ namespace business {
             { MATCH_MAKER_SCREEN_REQUEST, new MatchMakerScreenRequestAction },
             { ROOM_MESSAGE_ACTION, new RoomMessageAction },
             { JOINID_ACTION, new JoinIdAction },
+            { REQUEST_DRAW, new RequestDrawAction },
     };
 
     static std::wstring resolveTableTypeName(int tableType) {
@@ -101,18 +103,38 @@ namespace business {
             if(!user.player())
                 core::Carom3DProtocol::onUnhandledUserAction(session, actionData);
             else {
-                printf("Unhandled client action: %S - %x - %d\n",
+                // 屏蔽一些消息，影响调试
+                if (actionData.id() == 52)
+                {
+                    return;
+                }
+                printf("onUnhandledUserAction: %S - %x - %d - %d\n",
                     user.player()->name(),
                     actionData.id(),
+                    actionData.id(),
                     actionData.data().size());
-                printf("Data: \n");
-                for(u8 byte : actionData.data()) {
+
+                printf("xData: \n");
+                int i = 0;
+                for (u8 byte : actionData.data()) {
                     printf("%x ", byte);
                 }
+                /*printf("\n");
+                for (u8 byte : actionData.data()) {
+                    printf("%d:%x,", i, byte);
+                    i++;
+                }*/
                 printf("\n");
-                for(u8 byte : actionData.data()) {
+                printf("cData: \n");
+                for (u8 byte : actionData.data()) {
                     printf("%c ", (byte >= 0x20 && byte <= 0x7F) ? byte : ' ');
                 }
+                /*printf("\n");
+                i = 0;
+                for (u8 byte : actionData.data()) {
+                    printf("%d:%c,", i, (byte >= 0x20 && byte <= 0x7F) ? byte : ' ');
+                    i++;
+                }*/
                 printf("\n\n");
             }
         }

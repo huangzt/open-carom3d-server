@@ -17,11 +17,20 @@ namespace core {
             unsigned int actionDataLen = *(unsigned int *) &d[4];
             cryptoCtx.crypt((unsigned char *) &actionId, 4);
             cryptoCtx.crypt((unsigned char *) &actionDataLen, 4);
+            
+            // Check if data length is sufficient
             if ((unparsedLen - 8) < actionDataLen) {
-                //Couldn't parse
-                //TODO: set error to info
+                // Parse failed: incomplete data
+                info.parseSuccess = false;
+                info.errorActionId = actionId;
+                info.expectedLen = actionDataLen + 8;
+                info.actualLen = unparsedLen;
+                
+                printf("[WARN] Message parse failed - ActionID: 0x%x (%d), Expected: %d bytes, Actual: %d bytes\n", 
+                       actionId, actionId, info.expectedLen, info.actualLen);
                 return info;
             }
+            
             d += 8;
             cryptoCtx.crypt(d, actionDataLen);
             info.parsedActions.push_back(ActionData(actionId, d, actionDataLen));

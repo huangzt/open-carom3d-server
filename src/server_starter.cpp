@@ -29,11 +29,11 @@ void loadGameServerConfigs(std::string hostname, std::vector<GameServerConfig>& 
 
     gameServerConfigs.push_back({
         {hostname, 9883},
-        GameServerEventType::NORMAL, L"Novice", 4, 200,
+        GameServerEventType::NORMAL, L"China - Novice", 4, 200,
         { ServerTemplateId::NOVICE, 1.0f, 0, 1000 }
     });
 
-    gameServerConfigs.push_back({
+    /*gameServerConfigs.push_back({
         {hostname, 9884},
         GameServerEventType::NORMAL, L"Advanced", 4, 400,
         { ServerTemplateId::ADVANCED, 1.0f, 1000, 1000000000 }
@@ -49,15 +49,15 @@ void loadGameServerConfigs(std::string hostname, std::vector<GameServerConfig>& 
         {hostname, 9886},
         GameServerEventType::NORMAL, L"Professional", 4, 600,
         { ServerTemplateId::PROFESSIONAL, 1.0f, 100000, 1000000000 }
-    });
+    });*/
 
     gameServerConfigs.push_back({
         {hostname, 9887},
-        GameServerEventType::NORMAL, L"Free", 4, 100,
+        GameServerEventType::NORMAL, L"China - Free", 4, 100,
         { ServerTemplateId::FREE, 1.0f, 0, 1000000000 }
     });
 
-    gameServerConfigs.push_back({
+    /*gameServerConfigs.push_back({
         {hostname, 9888},
         GameServerEventType::NORMAL, L"Ranking", 4, 800,
         { ServerTemplateId::RANKING, 1.0f, 1000, 1000000000 }
@@ -67,7 +67,7 @@ void loadGameServerConfigs(std::string hostname, std::vector<GameServerConfig>& 
         {hostname, 9889},
         GameServerEventType::NORMAL, L"Training", 4, 0,
         { ServerTemplateId::TRAINING, 0.0f, 0, 0 }
-    });
+    });*/
 
 }
 
@@ -87,8 +87,8 @@ void runManagementServer(std::string hostname) {
 }
 
 void runHTTPServer(std::string hostname) {
-    HTTPServer httpServer({ hostname, 80 });
-    httpServer.run();
+    /*HTTPServer httpServer({ hostname, 80 });
+    httpServer.run();*/
 }
 
 int main(int argc, char *argv[]) {

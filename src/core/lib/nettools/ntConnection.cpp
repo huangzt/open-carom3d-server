@@ -1,6 +1,8 @@
-
+﻿
 #include "ntConnection.h"
 #include "ntEventHandler.h"
+#include <mstcpip.h>  // for tcp_keepalive structure
+#include <cstdio>     // for printf
 
 namespace nettools {
 
@@ -50,6 +52,8 @@ namespace nettools {
 		NT_ERROR err = wsa_error_or_success(newSocket);
 		if (err == NTERR_SUCCESS) {
 			*newClient = new ntConnection(newSocket, (sockaddr*)&clientAddr, sizeof(clientAddr));
+			// Set socket options for new connection
+			(*newClient)->setOption();
 		}
 		else {
 			*newClient = NULL;
@@ -86,7 +90,7 @@ namespace nettools {
 		int result = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
 		_socket(&m_socket);
 		setBlockingMode(false);
-		m_bindedData = NULL;
+		m_boundData = NULL;
 	}
 
 	ntConnection::ntConnection(int sock, sockaddr *address, u32 len) {
@@ -106,10 +110,51 @@ namespace nettools {
 	}
 
 	NT_ERROR ntConnection::getOption() {
+		// Reserved for getting socket options
 		return NTERR_SUCCESS;
 	}
 
 	NT_ERROR ntConnection::setOption() {
+		// 1. Disable Nagle algorithm to reduce latency (important for game servers)
+		int nodelay = 1;
+		if (setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, 
+		               (char*)&nodelay, sizeof(nodelay)) == SOCKET_ERROR) {
+			printf("[WARN] Failed to set TCP_NODELAY: %d\n", WSAGetLastError());
+		}
+		
+		// 2. Enable TCP Keep-Alive to detect zombie connections
+		int keepalive = 1;
+		if (setsockopt(m_socket, SOL_SOCKET, SO_KEEPALIVE, 
+		               (char*)&keepalive, sizeof(keepalive)) == SOCKET_ERROR) {
+			printf("[WARN] Failed to set SO_KEEPALIVE: %d\n", WSAGetLastError());
+		}
+		
+		// 3. Set Keep-Alive parameters (Windows specific)
+		tcp_keepalive alive;
+		alive.onoff = 1;                  // Enable
+		alive.keepalivetime = 30000;      // Start probing after 30s of no data
+		alive.keepaliveinterval = 5000;   // Probe interval 5s
+		
+		DWORD bytesReturned;
+		if (WSAIoctl(m_socket, SIO_KEEPALIVE_VALS, &alive, sizeof(alive),
+		             NULL, 0, &bytesReturned, NULL, NULL) == SOCKET_ERROR) {
+			printf("[WARN] Failed to set Keep-Alive parameters: %d\n", WSAGetLastError());
+		}
+		
+		// 4. Set send buffer size (optional, adjust as needed)
+		int sendbuf = 64 * 1024; // 64KB
+		if (setsockopt(m_socket, SOL_SOCKET, SO_SNDBUF,
+		               (char*)&sendbuf, sizeof(sendbuf)) == SOCKET_ERROR) {
+			printf("[WARN] Failed to set send buffer size: %d\n", WSAGetLastError());
+		}
+		
+		// 5. Set receive buffer size (optional, adjust as needed)
+		int recvbuf = 64 * 1024; // 64KB
+		if (setsockopt(m_socket, SOL_SOCKET, SO_RCVBUF,
+		               (char*)&recvbuf, sizeof(recvbuf)) == SOCKET_ERROR) {
+			printf("[WARN] Failed to set receive buffer size: %d\n", WSAGetLastError());
+		}
+		
 		return NTERR_SUCCESS;
 	}
 
@@ -128,10 +173,6 @@ namespace nettools {
 	NT_ERROR ntConnection::close() {
 		::shutdown(m_socket, SD_BOTH);
 		return _close(m_socket);
-	}
-
-	void ntConnection::setEventHandler(ntEventHandler *eventHandler) {
-		m_eventHandler = eventHandler;
 	}
 
 }

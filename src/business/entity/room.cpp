@@ -270,6 +270,21 @@ namespace business {
         m_roomUsers[listIndex].playing = false;
         --m_playingUserCount;
     }
+    
+    void Room::setUserDrawing(User& user, bool isDrawing) {
+        int listIndex = this->getUserListIndex(user);
+        if(listIndex == -1)
+            return;
+        m_roomUsers[listIndex].isDrawing = isDrawing;
+        if (isDrawing)
+        {
+            ++m_drawingUserCount;
+		}
+		else
+		{
+			--m_drawingUserCount;
+		}
+    }
 
     void Room::setUserOutOfGameScreen(User& user) {
         int listIndex = this->getUserListIndex(user);

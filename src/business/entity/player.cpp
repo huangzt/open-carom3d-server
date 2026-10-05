@@ -15,6 +15,7 @@ namespace business {
         //TODO(CGR): remove
         std::srand(std::time(nullptr)); // use current time as seed for random generator
         int random_variable = std::rand();
-        m_level = 1 + random_variable%54;
+        //m_level = 1 + random_variable%54;
+        m_level = 55;
     }
 }

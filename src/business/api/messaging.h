@@ -173,7 +173,7 @@ namespace business {
         u32 loses; //+0x65
         u32 chalks; //+0x69
         u32 unk6D; //+0x6D
-        bool hasPicture; //+0x71
+        bool hasPicture = false; //+0x71
         wchar_t country[3]; //+0x72
         u8 unk120; //+0x78
         u8 unk121; //+0x79

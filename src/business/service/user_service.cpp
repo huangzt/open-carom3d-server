@@ -84,7 +84,7 @@ namespace business {
 
         m_usersAccounts[account] = &user;
 
-		printf("Player logged in: %ws", account->name());
+		printf("Player logged in: %ws\n\n", account->name());
 		user.setAccount(account);
 		user.setPlayer(account->player());
 
@@ -101,16 +101,19 @@ namespace business {
 
 		//TODO(CGR): process login result
 		// If login result == 0
-		sendBlackBoardMessage(user, L"Welcome to Open Carom3D (v 0.2.0 Alpha)");
-		sendElectronicPanelMessage(user, L"Hello World");
+        // 登录后，公告信息
+		sendBlackBoardMessage(user, L"欢迎来到国服 Carom3D");
+		//sendElectronicPanelMessage(user, L"Hello World");
 
 		PlayerStats playerStats = { 0 };
-		playerStats.country[0] = L'B';
-		playerStats.country[1] = L'R';
+		playerStats.country[0] = L'C';
+		playerStats.country[1] = L'N';
+
 		ActionData playerStatsAction(0x68, (unsigned char*)&playerStats, sizeof(playerStats));
 		user.sendAction(playerStatsAction);
 
-		sendNotifyMessage(user, L"Welcome to Open Carom3D Server\n");
+        // 登录后，界面信息
+		sendNotifyMessage(user, L"欢迎来到国服 Carom3D\n");
 
 		std::wstring generatedChannelName = L"Carom ";
 		generatedChannelName += preferredLanguage;
@@ -236,6 +239,14 @@ namespace business {
             return;
 
         RoomService::getInstance().userFinishedPlaying(*room, user);
+    }
+    
+    void UserService::requestDraw(User& user, int isDraw) {
+        Room* room = user.roomIn();
+        if(nullptr == room)
+            return;
+
+        RoomService::getInstance().userRequestDraw(*room, user, isDraw);
     }
 
     void UserService::requestPlayerProfile(User& user, const wchar_t* playerName) {

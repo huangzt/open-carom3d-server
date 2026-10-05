@@ -1,0 +1,54 @@
+diff --git a/src/core/server/carom3d/carom3d_protocol.cpp b/src/core/server/carom3d/carom3d_protocol.cpp
+index 1234567..abcdefg 100644
+--- a/src/core/server/carom3d/carom3d_protocol.cpp
++++ b/src/core/server/carom3d/carom3d_protocol.cpp
+@@ -93,17 +93,24 @@ namespace core {
+     
+     void Carom3DProtocol::onHandledUserAction(Carom3DUserSession& session, const ActionData& actionData) {
+         business::User& user = (business::User&)session;
+-        if (user.player())
++        business::Player* player = user.player();
++        if (player)
+         {
+-            printf("onHandledUserAction: %S - %x - %d - %d\n",
+-                user.player()->name(),
++            const wchar_t* playerName = player->name();
++            // 额外的空指针检查，防止name()返回nullptr
++            if (playerName == nullptr) {
++                playerName = L"<unknown>";
++            }
++            
++            wprintf(L"onHandledUserAction: %s - %x - %d - %d\n",
++                playerName,
+                 actionData.id(),
+                 actionData.id(),
+                 actionData.data().size());
+ 
+             printf("xData: \n");
+-			int i = 0;
++            int i = 0;
+             for (u8 byte : actionData.data()) {
+                 printf("%x ", byte);
+             }
+diff --git a/src/business/game_server/game_server.cpp b/src/business/game_server/game_server.cpp
+index 234567..bcdefgh 100644
+--- a/src/business/game_server/game_server.cpp
++++ b/src/business/game_server/game_server.cpp
+@@ -107,8 +107,15 @@ namespace business {
+                 {
+                     return;
+                 }
+-                printf("onUnhandledUserAction: %S - %x - %d - %d\n",
+-                    user.player()->name(),
++                
++                const wchar_t* playerName = user.player()->name();
++                // 额外的空指针检查，防止name()返回nullptr
++                if (playerName == nullptr) {
++                    playerName = L"<unknown>";
++                }
++                
++                wprintf(L"onUnhandledUserAction: %s - %x - %d - %d\n",
++                    playerName,
+                     actionData.id(),
+                     actionData.id(),
+                     actionData.data().size());

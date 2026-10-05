@@ -47,6 +47,7 @@ namespace business {
         void sendMessageToRoom(User& user, const wchar_t* message);
         void startMatch(User& user);
         void matchFinished(User& user);
+        void requestDraw(User& user, int isDraw);
         void requestPlayerProfile(User& user, const wchar_t* playerName);
         void sendPrivateMessageToUser(User& user, const wchar_t* userName, const wchar_t* message);
         void requestUserSpot(User& user, const wchar_t* userName);

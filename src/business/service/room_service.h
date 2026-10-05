@@ -31,6 +31,7 @@ namespace business {
         void sendMessageToRoom(Room& room, User& sender, const wchar_t* message);
         void startMatch(Room& room);
         void userFinishedPlaying(Room& room, const User& user);
+        void userRequestDraw(Room& room, User& user, int isDraw);
         void setUserOutOfGameScreen(Room& room, User& user);
 
         void notifyServerOfRoomCreation(const GameServer& server, const Room& room);
